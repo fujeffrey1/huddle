@@ -1,0 +1,29 @@
+<script>
+  import RoomList from "../components/RoomList.svelte";
+  import Room from "../components/Room.svelte";
+</script>
+
+<style>
+  .content {
+    display: flex;
+    height: 100%;
+  }
+
+  .room-list {
+    flex: 1;
+    border-right: 1px solid rgba(255, 62, 0, 0.1);
+  }
+
+  .room {
+    flex: 3;
+  }
+</style>
+
+<div class="content">
+  <div class="room-list">
+    <RoomList />
+  </div>
+  <div class="room">
+    <Room />
+  </div>
+</div>
