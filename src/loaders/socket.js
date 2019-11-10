@@ -1,7 +1,7 @@
 import io from 'socket.io';
 
 export default server => {
-    io(server).on('connection', socket => {
+    return io(server, { serveClient: false }).on('connection', socket => {
         console.log('connected');
     });
 };

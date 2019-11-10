@@ -3,7 +3,7 @@ import socketLoader from './socket';
 
 export default async server => {
     const app = await polkaLoader(server);
-    await socketLoader(server);
+    const io = await socketLoader(server);
 
-    return app;
+    return { app, io };
 };

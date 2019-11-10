@@ -53,9 +53,5 @@
     <li>
       <a class:selected={segment === undefined} href=".">Huddle</a>
     </li>
-
-    <li>
-      <a rel="prefetch" class:selected={segment === 'blog'} href="blog">Blog</a>
-    </li>
   </ul>
 </nav>

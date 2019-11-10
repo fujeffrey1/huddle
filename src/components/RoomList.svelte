@@ -1,3 +1,17 @@
+<script>
+  import Modal from "./Modal.svelte";
+
+  let visible = false;
+
+  function handleOpen(event) {
+    visible = true;
+  }
+
+  function handleClose(event) {
+    visible = false;
+  }
+</script>
+
 <style>
   ul {
     display: flex;
@@ -42,11 +56,33 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+
+  .join-button {
+    margin: 10px auto;
+    padding: 8px 20px;
+    width: 90%;
+    border-radius: 50px;
+    background-color: rgba(0, 200, 128, 0.7);
+    font-size: 16px;
+  }
+
+  img {
+    vertical-align: middle;
+  }
+
+  .selected {
+    background-color: rgba(0, 0, 0, 0.05);
   }
 </style>
 
 <ul>
-  <li>
+  <button on:click={handleOpen} class="join-button">
+    <img src="/join-room.svg" alt="Join Room" />
+    <span>Join Room</span>
+  </button>
+  <li class="selected">
     <span>
       testdakfkjandjkajnvdnknjvkajkjnvdakvknjavkjnvdaknjkjnvdakjndvakjnvadkjvnda
     </span>
@@ -57,148 +93,8 @@
   <li>
     <span>test</span>
   </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
 </ul>
+
+{#if visible}
+  <Modal on:click={handleClose} />
+{/if}

@@ -47,6 +47,7 @@ self.addEventListener('fetch', event => {
     }
 
     // TODO: Fix this. Web sockets can't work offline
+    // TODO: Fix SW caching socket io polling
     // for everything else, try the network first, falling back to
     // cache if the user is offline. (If the pages never change, you
     // might prefer a cache-first approach to a network-first one.)
