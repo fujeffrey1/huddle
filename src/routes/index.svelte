@@ -1,12 +1,7 @@
 <script>
-  import io from "socket.io-client";
-  import { onMount } from "svelte";
+  import { NotificationDisplay } from "@beyonk/svelte-notifications";
   import RoomList from "../components/RoomList.svelte";
   import Room from "../components/Room.svelte";
-
-  onMount(() => {
-    const socket = io();
-  });
 </script>
 
 <style>
@@ -33,3 +28,5 @@
     <Room />
   </div>
 </div>
+
+<NotificationDisplay />

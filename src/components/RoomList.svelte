@@ -1,7 +1,12 @@
 <script>
+  import { slide } from "svelte/transition";
+  import { onDestroy } from "svelte";
+  import { socketStore as socket } from "./store.js";
   import Modal from "./Modal.svelte";
 
   let visible = false;
+  let activeRoom = "";
+  let rooms = {};
 
   function handleOpen(event) {
     visible = true;
@@ -9,6 +14,15 @@
 
   function handleClose(event) {
     visible = false;
+  }
+
+  function handleClick(room) {
+    activeRoom = room;
+  }
+
+  function joinRoom({ detail: { room, username } }) {
+    rooms[room] = username;
+    activeRoom = room;
   }
 </script>
 
@@ -56,16 +70,14 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    vertical-align: middle;
   }
 
   .join-button {
     margin: 10px auto;
-    padding: 8px 20px;
+    padding: 4px 20px;
     width: 90%;
     border-radius: 50px;
     background-color: rgba(0, 200, 128, 0.7);
-    font-size: 16px;
   }
 
   img {
@@ -80,21 +92,17 @@
 <ul>
   <button on:click={handleOpen} class="join-button">
     <img src="/join-room.svg" alt="Join Room" />
-    <span>Join Room</span>
   </button>
-  <li class="selected">
-    <span>
-      testdakfkjandjkajnvdnknjvkajkjnvdakvknjavkjnvdaknjkjnvdakjndvakjnvadkjvnda
-    </span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
-  <li>
-    <span>test</span>
-  </li>
+  {#each Object.keys(rooms).reverse() as room}
+    <li
+      class:selected={room === activeRoom}
+      transition:slide
+      on:click={() => handleClick(room)}>
+      <span>{room}</span>
+    </li>
+  {/each}
 </ul>
 
 {#if visible}
-  <Modal on:click={handleClose} />
+  <Modal on:close={handleClose} on:joinRoom={joinRoom} />
 {/if}

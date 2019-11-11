@@ -1,15 +1,28 @@
 <script>
   import { fade } from "svelte/transition";
-  import axios from "axios";
+  import { createEventDispatcher } from "svelte";
+  import { socketStore as socket } from "./store.js";
 
-  let username = "";
+  const dispatch = createEventDispatcher();
+
   let room = "";
+  let username = "";
+
+  $: roomTrimmed = room.trim();
+  $: usernameTrimmed = username.trim();
 
   function handleSubmit() {
-    axios
-      .post("/", { username, room })
-      .then(function(response) {})
-      .catch(function(error) {});
+    $socket.emit(
+      "join room",
+      {
+        room: roomTrimmed,
+        username: usernameTrimmed
+      },
+      function(data) {
+        dispatch("close");
+        dispatch("joinRoom", data);
+      }
+    );
   }
 </script>
 
@@ -92,19 +105,19 @@
   }
 
   .form-group input:focus ~ .control-label,
-  .form-group input:valid ~ .control-label {
+  .form-group input:not(:placeholder-shown) ~ .control-label {
     font-size: 0.8rem;
     color: gray;
     top: -1rem;
     left: 0;
   }
 
-  .form-group input:focus {
-    outline: none;
-  }
-
   .form-group input:focus ~ .control-label {
     color: rgba(0, 200, 128, 0.7);
+  }
+
+  .form-group input:focus {
+    outline: none;
   }
 
   .form-group input:focus ~ .bar::before {
@@ -127,22 +140,19 @@
 
 <div class="modal" transition:fade>
   <div class="modal-content">
-    <span class="close" on:click>&times;</span>
+    <span class="close" on:click={e => dispatch('close')}>&times;</span>
     <form on:submit|preventDefault={handleSubmit}>
       <div class="form-group">
-        <input type="text" bind:value={username} required />
-        <label for="input" class="control-label">Username</label>
-        <i class="bar" />
-      </div>
-      <div class="form-group">
-        <input type="text" bind:value={room} required />
+        <input type="text" bind:value={room} placeholder=" " required />
         <label for="input" class="control-label">Room #</label>
         <i class="bar" />
       </div>
-      <button
-        type="submit"
-        class="submit-button"
-        disabled={!username.trim() || !room.trim()}>
+      <div class="form-group">
+        <input type="text" bind:value={username} placeholder=" " />
+        <label for="input" class="control-label">Username</label>
+        <i class="bar" />
+      </div>
+      <button type="submit" class="submit-button" disabled={!roomTrimmed}>
         Join
       </button>
     </form>

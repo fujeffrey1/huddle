@@ -1,7 +1,7 @@
 import polka from 'polka';
+import bodyParser from 'body-parser';
 import compression from 'compression';
 import sirv from 'sirv';
-import bodyParser from 'body-parser';
 import * as sapper from '@sapper/server';
 
 const { PORT, NODE_ENV } = process.env;
