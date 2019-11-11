@@ -1,11 +1,10 @@
 <script>
   import { slide } from "svelte/transition";
-  import { onDestroy } from "svelte";
-  import { socketStore as socket } from "./store.js";
+  import { socketStore as socket } from "./stores/socket";
   import Modal from "./Modal.svelte";
 
+  export let activeRoom = "";
   let visible = false;
-  let activeRoom = "";
   let rooms = {};
 
   function handleOpen(event) {
@@ -49,19 +48,19 @@
     position: relative;
   }
 
-  li::after {
+  li:not(.selected)::after {
     position: absolute;
     right: 35px;
     content: "»";
     opacity: 0;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.25s ease-in-out;
   }
 
-  li:hover {
+  li:not(.selected):hover {
     cursor: pointer;
   }
 
-  li:hover::after {
+  li:not(.selected):hover::after {
     opacity: 1;
     transform: translateX(25px);
   }
@@ -74,10 +73,8 @@
 
   .join-button {
     margin: 10px auto;
-    padding: 4px 20px;
+    padding: 4px;
     width: 90%;
-    border-radius: 50px;
-    background-color: rgba(0, 200, 128, 0.7);
   }
 
   img {
@@ -93,10 +90,10 @@
   <button on:click={handleOpen} class="join-button">
     <img src="/join-room.svg" alt="Join Room" />
   </button>
-  {#each Object.keys(rooms).reverse() as room}
+  {#each Object.keys(rooms).reverse() as room (room)}
     <li
-      class:selected={room === activeRoom}
       transition:slide
+      class:selected={room === activeRoom}
       on:click={() => handleClick(room)}>
       <span>{room}</span>
     </li>

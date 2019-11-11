@@ -1,7 +1,7 @@
 <script>
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
-  import { socketStore as socket } from "./store.js";
+  import { socketStore as socket } from "./stores/socket";
 
   const dispatch = createEventDispatcher();
 
@@ -35,7 +35,6 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
-    transition: opacity 0.25 ease-in-out;
   }
 
   .modal-content {
@@ -128,8 +127,6 @@
   .submit-button {
     padding: 8px 20px;
     width: 100%;
-    border-radius: 50px;
-    background-color: rgba(0, 200, 128, 0.7);
     font-size: 16px;
   }
 

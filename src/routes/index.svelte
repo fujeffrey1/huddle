@@ -2,6 +2,8 @@
   import { NotificationDisplay } from "@beyonk/svelte-notifications";
   import RoomList from "../components/RoomList.svelte";
   import Room from "../components/Room.svelte";
+
+  let activeRoom;
 </script>
 
 <style>
@@ -12,7 +14,7 @@
 
   .room-list {
     flex: 1;
-    border-right: 1px solid rgba(255, 62, 0, 0.1);
+    border-right: 1px solid #ccc;
   }
 
   .room {
@@ -22,10 +24,10 @@
 
 <div class="content">
   <div class="room-list">
-    <RoomList />
+    <RoomList bind:activeRoom />
   </div>
   <div class="room">
-    <Room />
+    <Room {activeRoom} />
   </div>
 </div>
 

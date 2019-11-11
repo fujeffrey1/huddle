@@ -41,9 +41,7 @@ export default server => {
         socket.on('leave room', room => {
             socket.leave(room);
             delete roomList[room][socket.id];
-            if (Object.keys(roomList[room]).length === 0) {
-                delete roomList[room];
-            }
+            checkEmptyRoom(room);
         });
 
         socket.on('disconnect', () => {
@@ -51,10 +49,14 @@ export default server => {
             // Only update roomList
             for (let room of Object.keys(roomList)) {
                 delete roomList[room][socket.id];
-                if (Object.keys(roomList[room]).length === 0) {
-                    delete roomList[room];
-                }
+                checkEmptyRoom(room);
             }
         });
     });
 };
+
+function checkEmptyRoom(room) {
+    if (Object.keys(roomList[room]).length === 0) {
+        delete roomList[room];
+    }
+}

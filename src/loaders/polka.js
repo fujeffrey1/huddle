@@ -1,5 +1,4 @@
 import polka from 'polka';
-import bodyParser from 'body-parser';
 import compression from 'compression';
 import sirv from 'sirv';
 import * as sapper from '@sapper/server';
@@ -9,7 +8,6 @@ const dev = NODE_ENV === 'development';
 
 export default server => {
     return polka({ server })
-        .use(bodyParser.json())
         .use(compression({ threshold: 0 }), sirv('static', { dev }), sapper.middleware())
         .listen(PORT, err => {
             if (err) console.log('error', err);

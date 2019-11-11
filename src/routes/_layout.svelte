@@ -7,7 +7,7 @@
 <style>
   main {
     position: fixed;
-    height: 100%;
+    height: 94%;
     width: 100%;
   }
 </style>

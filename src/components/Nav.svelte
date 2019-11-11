@@ -4,9 +4,10 @@
 
 <style>
   nav {
-    border-bottom: 1px solid rgba(255, 62, 0, 0.1);
+    border-bottom: 1px solid #ccc;
     font-weight: 300;
     padding: 0 1em;
+    height: 6%;
   }
 
   ul {
@@ -42,6 +43,7 @@
   }
 
   a {
+    color: teal;
     text-decoration: none;
     padding: 1em 0.5em;
     display: block;
