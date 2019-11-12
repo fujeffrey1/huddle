@@ -13,6 +13,7 @@
   ul {
     margin: 0;
     padding: 0;
+    height: 100%;
   }
 
   /* clearfix */
@@ -25,6 +26,7 @@
   li {
     display: block;
     float: left;
+    height: 100%;
   }
 
   .selected {
@@ -47,6 +49,8 @@
     text-decoration: none;
     padding: 1em 0.5em;
     display: block;
+    box-sizing: border-box;
+    height: 100%;
   }
 </style>
 

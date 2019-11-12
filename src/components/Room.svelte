@@ -3,22 +3,29 @@
 
   export let activeRoom;
   let div;
+  let autoscroll;
+  let messages = [];
 
-  beforeUpdate(() => {});
+  beforeUpdate(() => {
+    autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 1;
+  });
 
-  afterUpdate(() => {});
+  afterUpdate(() => {
+    if (autoscroll) div.scrollTo(0, div.scrollHeight);
+  });
 
   function handleKeydown(event) {
-    // if (event.which === 13) {
-    //   const text = event.target.value;
-    //   if (!text) return;
-    //   event.target.value = "";
-    // }
+    if (event.which === 13) {
+      const message = event.target.value;
+      if (!message) return;
+      messages = [...messages, { username: "user", message }];
+      event.target.value = "";
+    }
   }
 </script>
 
 <style>
-  .chat {
+  .room {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -29,6 +36,11 @@
     overflow-y: auto;
   }
 
+  span {
+    padding: 0.5em 1em;
+    display: inline-block;
+  }
+
   input {
     font-size: 1.8vh;
     height: 5%;
@@ -37,9 +49,15 @@
   }
 </style>
 
-<div class="chat">
+<div class="room">
   <h1>{activeRoom}</h1>
-  <div class="scrollable" bind:this={div} />
+  <div class="scrollable" bind:this={div}>
+    {#each messages as { username, message }}
+      <article class={username}>
+        <span>{message}</span>
+      </article>
+    {/each}
+  </div>
 
   <input on:keydown={handleKeydown} />
 </div>
