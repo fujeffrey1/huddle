@@ -32,6 +32,8 @@
   .selected {
     position: relative;
     display: inline-block;
+    color: teal;
+    font-weight: bold;
   }
 
   .selected::after {
@@ -45,7 +47,7 @@
   }
 
   a {
-    color: teal;
+    color: #ccc;
     text-decoration: none;
     padding: 1em 0.5em;
     display: block;
@@ -58,6 +60,9 @@
   <ul>
     <li>
       <a class:selected={segment === undefined} href=".">Huddle</a>
+    </li>
+    <li>
+      <a class:selected={segment === 'about'} href="/about">About</a>
     </li>
   </ul>
 </nav>

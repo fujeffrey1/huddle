@@ -1,10 +1,12 @@
 <script>
   import { beforeUpdate, afterUpdate } from "svelte";
+  import { messageStore } from "./stores/message";
 
   export let activeRoom;
+  export let activeUsername;
   let div;
   let autoscroll;
-  let messages = [];
+  $: messages = $messageStore[activeRoom];
 
   beforeUpdate(() => {
     autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 1;
@@ -18,7 +20,7 @@
     if (event.which === 13) {
       const message = event.target.value;
       if (!message) return;
-      messages = [...messages, { username: "user", message }];
+      messageStore.create(activeRoom, activeUsername, message);
       event.target.value = "";
     }
   }
@@ -31,8 +33,12 @@
     height: 100%;
   }
 
+  .gray {
+    background-color: #ccc;
+  }
+
   .scrollable {
-    height: 95%;
+    height: 94%;
     overflow-y: auto;
   }
 
@@ -42,22 +48,26 @@
   }
 
   input {
-    font-size: 1.8vh;
-    height: 5%;
+    font-size: 2vh;
+    height: 6%;
     border: 1px solid #ccc;
     border-left: 0;
   }
 </style>
 
-<div class="room">
-  <h1>{activeRoom}</h1>
-  <div class="scrollable" bind:this={div}>
-    {#each messages as { username, message }}
-      <article class={username}>
-        <span>{message}</span>
-      </article>
-    {/each}
-  </div>
+<div class="room" class:gray={!activeRoom}>
+  {#if activeRoom}
+    <h1>{activeRoom}</h1>
+    <h1>{activeUsername}</h1>
+    <div class="scrollable" bind:this={div}>
+      {#each messages as { username, message }}
+        <!-- <article class={username}> -->
+        <article>
+          <span>{message}</span>
+        </article>
+      {/each}
+    </div>
 
-  <input on:keydown={handleKeydown} />
+    <input on:keydown={handleKeydown} />
+  {/if}
 </div>

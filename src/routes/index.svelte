@@ -4,6 +4,7 @@
   import Room from "../components/Room.svelte";
 
   let activeRoom;
+  let activeUsername;
 </script>
 
 <style>
@@ -24,10 +25,10 @@
 
 <div class="content">
   <div class="room-list">
-    <RoomList bind:activeRoom />
+    <RoomList bind:activeRoom bind:activeUsername />
   </div>
   <div class="room">
-    <Room {activeRoom} />
+    <Room {activeRoom} {activeUsername} />
   </div>
 </div>
 

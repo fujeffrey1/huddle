@@ -1,9 +1,10 @@
 <script>
   import { slide } from "svelte/transition";
-  import { socketStore as socket } from "./stores/socket";
   import Modal from "./Modal.svelte";
+  import { messageStore } from "./stores/message";
 
   export let activeRoom = "";
+  export let activeUsername = "";
   let visible = false;
   let rooms = {};
 
@@ -15,13 +16,16 @@
     visible = false;
   }
 
-  function handleClick(room) {
+  function handleClick(room, username) {
     activeRoom = room;
+    activeUsername = username;
   }
 
   function joinRoom({ detail: { room, username } }) {
     rooms[room] = username;
+    messageStore.join(room, username);
     activeRoom = room;
+    activeUsername = username;
   }
 </script>
 
@@ -90,11 +94,11 @@
   <button on:click={handleOpen} class="join-button">
     <img src="/join-room.svg" alt="Join Room" />
   </button>
-  {#each Object.keys(rooms).reverse() as room (room)}
+  {#each Object.entries(rooms).reverse() as [room, username] (room)}
     <li
       transition:slide
       class:selected={room === activeRoom}
-      on:click={() => handleClick(room)}>
+      on:click={() => handleClick(room, username)}>
       <span>{room}</span>
     </li>
   {/each}

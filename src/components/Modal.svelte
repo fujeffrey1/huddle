@@ -40,7 +40,7 @@
   .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
-    padding: 20px;
+    padding: 5px 20px 20px;
     border: 1px solid #888;
     border-radius: 10px;
     width: 35%;
@@ -132,6 +132,7 @@
 
   .submit-button:disabled {
     opacity: 0.7;
+    pointer-events: none;
   }
 </style>
 
