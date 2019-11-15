@@ -24,6 +24,16 @@ function createMessageStore() {
                 }
                 return messages;
             });
+        },
+        leave: (room, username) => {
+            update(messages => {
+                if (messages[room]) {
+                    messages[room] = [...messages[room], { message: `${username} has left` }];
+                } else {
+                    messages[room] = [{ message: `${username} has left` }];
+                }
+                return messages;
+            });
         }
     };
 }

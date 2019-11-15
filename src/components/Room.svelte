@@ -1,6 +1,7 @@
 <script>
   import { beforeUpdate, afterUpdate } from "svelte";
   import { messageStore } from "./stores/message";
+  import { socketStore as socket } from "./stores/socket";
 
   export let activeRoom;
   export let activeUsername;
@@ -20,9 +21,23 @@
     if (event.which === 13) {
       const message = event.target.value;
       if (!message) return;
-      messageStore.create(activeRoom, activeUsername, message);
+      $socket.emit(
+        "message",
+        {
+          room: activeRoom,
+          username: activeUsername,
+          message
+        },
+        function({ room, username, message }) {
+          messageStore.create(room, username, message);
+        }
+      );
       event.target.value = "";
     }
+  }
+
+  function leaveRoom() {
+    $socket.emit("leave room", activeRoom);
   }
 </script>
 
@@ -31,6 +46,11 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+  }
+
+  .room-content {
+    height: 100%;
+    padding: 5px 15px;
   }
 
   .gray {
@@ -42,9 +62,36 @@
     overflow-y: auto;
   }
 
-  span {
-    padding: 0.5em 1em;
+  article {
+    padding: 4px 0;
+  }
+
+  article.me {
+    text-align: right;
+  }
+
+  article.system {
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .message {
+    padding: 4px 1em;
     display: inline-block;
+    color: white;
+    word-break: break-all;
+    background-color: #0074d9;
+    border-radius: 1em 1em 1em 0;
+  }
+
+  .me .message {
+    background-color: rgba(0, 200, 128, 0.7);
+    border-radius: 1em 1em 0 1em;
+  }
+
+  .system .message {
+    background: none;
+    color: grey;
   }
 
   input {
@@ -57,17 +104,18 @@
 
 <div class="room" class:gray={!activeRoom}>
   {#if activeRoom}
-    <h1>{activeRoom}</h1>
-    <h1>{activeUsername}</h1>
-    <div class="scrollable" bind:this={div}>
-      {#each messages as { username, message }}
-        <!-- <article class={username}> -->
-        <article>
-          <span>{message}</span>
-        </article>
-      {/each}
+    <div class="room-content">
+      <span class="close" on:click={leaveRoom}>&times;</span>
+      <div class="scrollable" bind:this={div}>
+        {#each messages as { username, message }}
+          <article
+            class:me={activeUsername === username}
+            class:system={!username}>
+            <span class="message">{message}</span>
+          </article>
+        {/each}
+      </div>
     </div>
-
     <input on:keydown={handleKeydown} />
   {/if}
 </div>

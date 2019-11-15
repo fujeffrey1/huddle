@@ -46,19 +46,6 @@
     width: 35%;
   }
 
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 24px;
-    font-weight: bold;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: black;
-    cursor: pointer;
-  }
-
   .form-group {
     position: relative;
     margin-top: 2.25rem;
@@ -125,7 +112,7 @@
   }
 
   .submit-button {
-    padding: 8px 20px;
+    padding: 8px;
     width: 100%;
     font-size: 16px;
   }

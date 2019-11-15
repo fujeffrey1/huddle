@@ -30,33 +30,45 @@ export default server => {
                 return socket.emit('err', `Username '${username}' is taken in room '${room}'`);
             }
             // Join room and add username to the room list
-            socket.join(room);
             if (!roomList[room]) {
                 roomList[room] = {};
             }
             roomList[room][socket.id] = username;
+            socket.join(room);
+            // Tell other clients that someone joined
+            socket.to(room).emit('join room', { room, username });
             ack({ room, username });
+        });
+
+        socket.on('message', ({ room, username, message }, ack) => {
+            // Send message to other clients
+            socket.to(room).emit('message', { room, username, message });
+            ack({ room, username, message });
         });
 
         socket.on('leave room', room => {
             socket.leave(room);
-            delete roomList[room][socket.id];
-            checkEmptyRoom(room);
+            leaveRoom(room, socket.id);
         });
 
         socket.on('disconnect', () => {
             // Socket will leave rooms automatically
             // Only update roomList
             for (let room of Object.keys(roomList)) {
-                delete roomList[room][socket.id];
-                checkEmptyRoom(room);
+                leaveRoom(room, socket.id);
             }
         });
     });
 };
 
-function checkEmptyRoom(room) {
-    if (Object.keys(roomList[room]).length === 0) {
+function leaveRoom(room, socketId) {
+    if (Object.keys(roomList[room]).length === 1) {
         delete roomList[room];
+    } else {
+        socket.to(room).emit('leave room', { room, username: roomList[room][socketId] });
+        delete roomList[room][socketId];
     }
 }
+
+// TODO: Number of people in each room? (as part of this delete message store for empty rooms)
+// TODO: User is typing?
