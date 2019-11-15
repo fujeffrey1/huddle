@@ -1,12 +1,14 @@
 <script>
   import { slide } from "svelte/transition";
+  import { createEventDispatcher } from "svelte";
   import Modal from "./Modal.svelte";
-  import { messageStore } from "./stores/message";
 
-  export let activeRoom = "";
-  export let activeUsername = "";
+  const dispatch = createEventDispatcher();
+
+  export let rooms;
+  export let activeRoom;
+  export let activeUsername;
   let visible = false;
-  let rooms = {};
 
   function handleOpen(event) {
     visible = true;
@@ -14,18 +16,6 @@
 
   function handleClose(event) {
     visible = false;
-  }
-
-  function handleClick(room, username) {
-    activeRoom = room;
-    activeUsername = username;
-  }
-
-  function joinRoom({ detail: { room, username } }) {
-    rooms[room] = username;
-    messageStore.join(room, username);
-    activeRoom = room;
-    activeUsername = username;
   }
 </script>
 
@@ -98,12 +88,12 @@
     <li
       transition:slide
       class:selected={room === activeRoom}
-      on:click={() => handleClick(room, username)}>
+      on:click={() => dispatch('clickRoom', { room, username })}>
       <span>{room}</span>
     </li>
   {/each}
 </ul>
 
 {#if visible}
-  <Modal on:close={handleClose} on:joinRoom={joinRoom} />
+  <Modal on:close={handleClose} on:joinRoom />
 {/if}

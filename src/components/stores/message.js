@@ -34,6 +34,12 @@ function createMessageStore() {
                 }
                 return messages;
             });
+        },
+        close: room => {
+            update(messages => {
+                delete messages[room];
+                return messages;
+            });
         }
     };
 }

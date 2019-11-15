@@ -1,7 +1,9 @@
 <script>
-  import { beforeUpdate, afterUpdate } from "svelte";
+  import { beforeUpdate, afterUpdate, createEventDispatcher } from "svelte";
   import { messageStore } from "./stores/message";
   import { socketStore as socket } from "./stores/socket";
+
+  const dispatch = createEventDispatcher();
 
   export let activeRoom;
   export let activeUsername;
@@ -14,7 +16,7 @@
   });
 
   afterUpdate(() => {
-    if (autoscroll) div.scrollTo(0, div.scrollHeight);
+    if (div && autoscroll) div.scrollTo(0, div.scrollHeight);
   });
 
   function handleKeydown(event) {
@@ -37,7 +39,9 @@
   }
 
   function leaveRoom() {
-    $socket.emit("leave room", activeRoom);
+    $socket.emit("leave room", activeRoom, function(data) {
+      dispatch("leaveRoom", data);
+    });
   }
 </script>
 

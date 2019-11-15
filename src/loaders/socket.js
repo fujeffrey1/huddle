@@ -46,9 +46,10 @@ export default server => {
             ack({ room, username, message });
         });
 
-        socket.on('leave room', room => {
+        socket.on('leave room', (room, ack) => {
             socket.leave(room);
             leaveRoom(room, socket.id);
+            ack(room);
         });
 
         socket.on('disconnect', () => {
@@ -70,5 +71,7 @@ function leaveRoom(room, socketId) {
     }
 }
 
-// TODO: Number of people in each room? (as part of this delete message store for empty rooms)
+// TODO: SEARCH ALL TODOS
+// TODO: Number of people in each room?
 // TODO: User is typing?
+// TODO: Copy and paste room link
