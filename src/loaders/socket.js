@@ -1,4 +1,5 @@
 import io from 'socket.io';
+import crypto from 'crypto';
 
 const DEFAULT_USERNAME = 'Anonymous';
 
@@ -21,29 +22,38 @@ export default server => {
             if (Object.keys(socket.rooms).includes(room)) {
                 return socket.emit('err', `You are already in room '${room}'`);
             }
-            // Default username
-            if (!username) {
-                username = DEFAULT_USERNAME;
-            }
             // Check for existing username in room
-            if (username !== DEFAULT_USERNAME && roomList[room] && Object.values(roomList[room]).includes(username)) {
+            if (username && roomList[room] && Object.values(roomList[room]).includes(username)) {
                 return socket.emit('err', `Username '${username}' is taken in room '${room}'`);
+            } else {
+                if (!username) {
+                    const random = crypto.randomBytes(4).toString('hex');
+                    username = `${DEFAULT_USERNAME}_${random}`;
+                }
+                if (!roomList[room]) {
+                    roomList[room] = {};
+                }
             }
             // Join room and add username to the room list
-            if (!roomList[room]) {
-                roomList[room] = {};
-            }
+            const others = Object.values(roomList[room]);
             roomList[room][socket.id] = username;
             socket.join(room);
             // Tell other clients that someone joined
             socket.to(room).emit('join room', { room, username });
-            ack({ room, username });
+            ack({ room, me: username, others });
         });
 
         socket.on('message', ({ room, username, message }, ack) => {
-            // Send message to other clients
             socket.to(room).emit('message', { room, username, message });
             ack({ room, username, message });
+        });
+
+        socket.on('typing', ({ room, username }) => {
+            socket.to(room).emit('typing', { room, username });
+        });
+
+        socket.on('stop typing', ({ room, username }) => {
+            socket.to(room).emit('stop typing', { room, username });
         });
 
         socket.on('leave room', (room, ack) => {
@@ -71,7 +81,6 @@ function leaveRoom(room, socketId) {
     }
 }
 
-// TODO: SEARCH ALL TODOS
-// TODO: Number of people in each room?
 // TODO: User is typing?
 // TODO: Copy and paste room link
+// TODO: CSS for messages (timestamp)

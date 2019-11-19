@@ -7,14 +7,11 @@ function createMessageStore() {
         subscribe,
         create: (room, username, message) => {
             update(messages => {
-                if (messages[room]) {
-                    messages[room] = [...messages[room], { username, message }];
-                } else {
-                    messages[room] = [{ username, message }];
-                }
+                messages[room] = [...messages[room], { username, message }];
                 return messages;
             });
         },
+        // We only need to check for empty room here
         join: (room, username) => {
             update(messages => {
                 if (messages[room]) {
@@ -27,11 +24,7 @@ function createMessageStore() {
         },
         leave: (room, username) => {
             update(messages => {
-                if (messages[room]) {
-                    messages[room] = [...messages[room], { message: `${username} has left` }];
-                } else {
-                    messages[room] = [{ message: `${username} has left` }];
-                }
+                messages[room] = [...messages[room], { message: `${username} has left` }];
                 return messages;
             });
         },

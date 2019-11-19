@@ -61,8 +61,5 @@
     <li>
       <a class:selected={segment === undefined} href=".">Huddle</a>
     </li>
-    <li>
-      <a class:selected={segment === 'about'} href="/about">About</a>
-    </li>
   </ul>
 </nav>

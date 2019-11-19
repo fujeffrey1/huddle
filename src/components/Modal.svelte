@@ -44,6 +44,7 @@
     border: 1px solid #888;
     border-radius: 10px;
     width: 35%;
+    position: relative;
   }
 
   .form-group {
@@ -133,7 +134,12 @@
         <i class="bar" />
       </div>
       <div class="form-group">
-        <input type="text" bind:value={username} placeholder=" " />
+        <input
+          type="text"
+          bind:value={username}
+          placeholder="
+          "
+          maxlength="50" />
         <label for="input" class="control-label">Username</label>
         <i class="bar" />
       </div>

@@ -2,10 +2,10 @@
   import { slide } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import Modal from "./Modal.svelte";
+  import { userStore } from "./stores/user";
 
   const dispatch = createEventDispatcher();
 
-  export let rooms;
   export let activeRoom;
   export let activeUsername;
   let visible = false;
@@ -21,14 +21,9 @@
 
 <style>
   ul {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
     padding: 0;
     margin: 0;
-    min-width: 285px;
-    max-width: 360px;
-    overflow: scroll;
+    overflow-y: auto;
     height: 100%;
   }
 
@@ -36,10 +31,11 @@
     display: flex;
     height: 50px;
     line-height: 50px;
-    padding: 0 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1.5rem;
     border-bottom: 1px solid rgba(255, 62, 0, 0.1);
-    justify-content: center;
     position: relative;
+    align-items: center;
   }
 
   li:not(.selected)::after {
@@ -59,13 +55,25 @@
     transform: translateX(25px);
   }
 
-  span {
+  .badge {
+    margin-right: 0.5rem;
+    line-height: 25px;
+    border-radius: 5px;
+    background-color: teal;
+    color: white;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .room {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
   .join-button {
+    display: flex;
+    justify-content: center;
     margin: 10px auto;
     padding: 4px;
     width: 90%;
@@ -84,12 +92,13 @@
   <button on:click={handleOpen} class="join-button">
     <img src="/join-room.svg" alt="Join Room" />
   </button>
-  {#each Object.entries(rooms).reverse() as [room, username] (room)}
+  {#each Object.entries($userStore).reverse() as [room, { me, others }] (room)}
     <li
       transition:slide
       class:selected={room === activeRoom}
-      on:click={() => dispatch('clickRoom', { room, username })}>
-      <span>{room}</span>
+      on:click={() => dispatch('clickRoom', { room, me })}>
+      <span class="badge">{Object.keys(others).length + 1}</span>
+      <span class="room">{room}</span>
     </li>
   {/each}
 </ul>

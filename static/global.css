@@ -33,8 +33,9 @@ button:hover {
 }
 
 .close {
+    position: absolute;
+    right: 15px;
     color: #aaa;
-    float: right;
     font-size: 24px;
     font-weight: bold;
 }

@@ -1,15 +1,39 @@
 <script>
   import { beforeUpdate, afterUpdate, createEventDispatcher } from "svelte";
+  import debounce from "lodash.debounce";
+  import { userStore } from "./stores/user";
   import { messageStore } from "./stores/message";
   import { socketStore as socket } from "./stores/socket";
 
   const dispatch = createEventDispatcher();
+  const TYPING_TIMER = 5000;
 
   export let activeRoom;
   export let activeUsername;
+  let previousActiveRoom;
+  let previousActiveUsername;
   let div;
+  let input;
   let autoscroll;
+  let typingTimeout;
+  $: users = activeRoom && $userStore[activeRoom]["others"];
   $: messages = $messageStore[activeRoom];
+
+  // Handles bugs related to switching rooms
+  $: if (activeRoom !== previousActiveRoom) {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+      $socket.emit("stop typing", {
+        room: previousActiveRoom,
+        username: previousActiveUsername
+      });
+    }
+    if (input) {
+      input.value = "";
+    }
+    previousActiveRoom = activeRoom;
+    previousActiveUsername = activeUsername;
+  }
 
   beforeUpdate(() => {
     autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 1;
@@ -18,6 +42,21 @@
   afterUpdate(() => {
     if (div && autoscroll) div.scrollTo(0, div.scrollHeight);
   });
+
+  function stopTypingTimeout() {
+    typingTimeout = setTimeout(() => {
+      $socket.emit("stop typing", {
+        room: activeRoom,
+        username: activeUsername
+      });
+      typingTimeout = null;
+    }, TYPING_TIMER);
+  }
+
+  let resetStopTypingTimeout = debounce(() => {
+    clearTimeout(typingTimeout);
+    stopTypingTimeout();
+  }, 300);
 
   function handleKeydown(event) {
     if (event.which === 13) {
@@ -34,7 +73,16 @@
           messageStore.create(room, username, message);
         }
       );
+      $socket.emit("stop typing", {
+        room: activeRoom,
+        username: activeUsername
+      });
       event.target.value = "";
+    } else if (!typingTimeout) {
+      $socket.emit("typing", { room: activeRoom, username: activeUsername });
+      stopTypingTimeout();
+    } else {
+      resetStopTypingTimeout();
     }
   }
 
@@ -54,7 +102,6 @@
 
   .room-content {
     height: 100%;
-    padding: 5px 15px;
   }
 
   .gray {
@@ -62,12 +109,14 @@
   }
 
   .scrollable {
-    height: 94%;
+    height: 100%;
     overflow-y: auto;
+    padding: 5px 40px;
+    box-sizing: border-box;
   }
 
   article {
-    padding: 4px 0;
+    padding: 2px 0;
   }
 
   article.me {
@@ -76,6 +125,12 @@
 
   article.system {
     text-align: center;
+    font-size: 12px;
+  }
+
+  .username {
+    display: block;
+    color: grey;
     font-size: 12px;
   }
 
@@ -108,18 +163,28 @@
 
 <div class="room" class:gray={!activeRoom}>
   {#if activeRoom}
+    <span class="close" on:click={leaveRoom}>&times;</span>
     <div class="room-content">
-      <span class="close" on:click={leaveRoom}>&times;</span>
       <div class="scrollable" bind:this={div}>
-        {#each messages as { username, message }}
+        {#each messages as { username, message }, i}
           <article
             class:me={activeUsername === username}
             class:system={!username}>
+            {#if i > 0 && messages[i - 1].username !== username}
+              <span class="username">{username}</span>
+            {/if}
             <span class="message">{message}</span>
           </article>
         {/each}
+        {#each Object.entries(users) as [username, { typing }]}
+          {#if typing}
+            <article class="system">
+              <span class="message">{username} is typing...</span>
+            </article>
+          {/if}
+        {/each}
       </div>
     </div>
-    <input on:keydown={handleKeydown} />
+    <input on:keypress={handleKeydown} bind:this={input} />
   {/if}
 </div>

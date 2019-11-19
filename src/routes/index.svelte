@@ -2,29 +2,28 @@
   import { NotificationDisplay } from "@beyonk/svelte-notifications";
   import RoomList from "../components/RoomList.svelte";
   import Room from "../components/Room.svelte";
+  import { userStore } from "../components/stores/user";
   import { messageStore } from "../components/stores/message";
 
-  let rooms = {};
   let activeRoom = "";
   let activeUsername = "";
 
-  function joinRoom({ detail: { room, username } }) {
-    rooms[room] = username;
-    messageStore.join(room, username);
+  function joinRoom({ detail: { room, me, others } }) {
+    userStore.join(room, me, others);
+    messageStore.join(room, me);
     activeRoom = room;
-    activeUsername = username;
+    activeUsername = me;
   }
 
-  function clickRoom({ detail: { room, username } }) {
+  function clickRoom({ detail: { room, me } }) {
     activeRoom = room;
-    activeUsername = username;
+    activeUsername = me;
   }
 
   function leaveRoom({ detail: room }) {
-    delete rooms[room];
-    rooms = rooms;
     activeRoom = "";
     activeUsername = "";
+    userStore.leave(room);
     messageStore.close(room);
   }
 </script>
@@ -38,6 +37,7 @@
   .room-list {
     flex: 1;
     border-right: 1px solid #ccc;
+    max-width: 380px;
   }
 
   .room {
@@ -48,7 +48,6 @@
 <div class="content">
   <div class="room-list">
     <RoomList
-      {rooms}
       {activeRoom}
       {activeUsername}
       on:joinRoom={joinRoom}
