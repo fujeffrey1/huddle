@@ -69,8 +69,8 @@
           username: activeUsername,
           message
         },
-        function({ room, username, message }) {
-          messageStore.create(room, username, message);
+        function({ room, username, message, timestamp }) {
+          messageStore.create(room, username, message, timestamp);
         }
       );
       $socket.emit("stop typing", {

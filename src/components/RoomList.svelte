@@ -1,6 +1,7 @@
 <script>
   import { slide } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
+  import Tooltip from "./Tooltip.svelte";
   import Modal from "./Modal.svelte";
   import { userStore } from "./stores/user";
 
@@ -75,12 +76,9 @@
     display: flex;
     justify-content: center;
     margin: 10px auto;
-    padding: 4px;
+    font-size: 22px;
+    font-weight: 800;
     width: 90%;
-  }
-
-  img {
-    vertical-align: middle;
   }
 
   .selected {
@@ -89,15 +87,15 @@
 </style>
 
 <ul>
-  <button on:click={handleOpen} class="join-button">
-    <img src="/join-room.svg" alt="Join Room" />
-  </button>
+  <button on:click={handleOpen} class="join-button">+</button>
   {#each Object.entries($userStore).reverse() as [room, { me, others }] (room)}
     <li
       transition:slide
       class:selected={room === activeRoom}
       on:click={() => dispatch('clickRoom', { room, me })}>
-      <span class="badge">{Object.keys(others).length + 1}</span>
+      <Tooltip>
+        <span class="badge">{Object.keys(others).length + 1}</span>
+      </Tooltip>
       <span class="room">{room}</span>
     </li>
   {/each}

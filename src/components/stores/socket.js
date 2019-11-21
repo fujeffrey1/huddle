@@ -6,13 +6,13 @@ import { messageStore } from './message';
 
 const socket = io();
 
-socket.on('join room', ({ room, username }) => {
+socket.on('join room', ({ room, username, timestamp }) => {
     userStore.add(room, username);
-    messageStore.join(room, username);
+    messageStore.join(room, username, timestamp);
 });
 
-socket.on('message', ({ room, username, message }) => {
-    messageStore.create(room, username, message);
+socket.on('message', ({ room, username, message, timestamp }) => {
+    messageStore.create(room, username, message, timestamp);
 });
 
 socket.on('typing', ({ room, username }) => {
@@ -23,9 +23,9 @@ socket.on('stop typing', ({ room, username }) => {
     userStore.stopTyping(room, username);
 });
 
-socket.on('leave room', ({ room, username }) => {
+socket.on('leave room', ({ room, username, timestamp }) => {
     userStore.remove(room, username);
-    messageStore.leave(room, username);
+    messageStore.leave(room, username, timestamp);
 });
 
 socket.on('err', message => {

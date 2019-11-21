@@ -39,13 +39,15 @@ export default server => {
             roomList[room][socket.id] = username;
             socket.join(room);
             // Tell other clients that someone joined
-            socket.to(room).emit('join room', { room, username });
-            ack({ room, me: username, others });
+            const timestamp = Date.now();
+            socket.to(room).emit('join room', { room, username, timestamp });
+            ack({ room, me: username, others, timestamp });
         });
 
         socket.on('message', ({ room, username, message }, ack) => {
-            socket.to(room).emit('message', { room, username, message });
-            ack({ room, username, message });
+            const timestamp = Date.now();
+            socket.to(room).emit('message', { room, username, message, timestamp });
+            ack({ room, username, message, timestamp });
         });
 
         socket.on('typing', ({ room, username }) => {
@@ -76,11 +78,11 @@ function leaveRoom(room, socketId) {
     if (Object.keys(roomList[room]).length === 1) {
         delete roomList[room];
     } else {
-        socket.to(room).emit('leave room', { room, username: roomList[room][socketId] });
+        socket.to(room).emit('leave room', { room, username: roomList[room][socketId], timestamp: Date.now() });
         delete roomList[room][socketId];
     }
 }
 
-// TODO: User is typing?
 // TODO: Copy and paste room link
 // TODO: CSS for messages (timestamp)
+// TODO: list of users on hover

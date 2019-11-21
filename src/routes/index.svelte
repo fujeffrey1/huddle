@@ -8,9 +8,9 @@
   let activeRoom = "";
   let activeUsername = "";
 
-  function joinRoom({ detail: { room, me, others } }) {
+  function joinRoom({ detail: { room, me, others, timestamp } }) {
     userStore.join(room, me, others);
-    messageStore.join(room, me);
+    messageStore.join(room, me, timestamp);
     activeRoom = room;
     activeUsername = me;
   }
