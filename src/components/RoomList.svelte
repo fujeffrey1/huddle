@@ -56,8 +56,7 @@
   }
 
   .badge {
-    margin-right: 0.5rem;
-    line-height: 25px;
+    display: inline-block;
     border-radius: 5px;
     background-color: teal;
     color: white;
@@ -65,33 +64,8 @@
     font-size: 12px;
   }
 
-  .tooltip {
-    position: relative;
-  }
-
-  .tooltip:hover:after {
-    position: absolute;
-    top: 0;
-    left: 150%;
-    background: teal;
-    border-radius: 5px;
-    color: white;
-    content: attr(title);
-    padding: 0 12px;
-    line-height: 25px;
-  }
-
-  .tooltip:hover:before {
-    position: absolute;
-    top: 25%;
-    left: 100%;
-    content: "";
-    border-color: transparent teal transparent transparent;
-    border-width: 6px;
-    border-style: solid;
-  }
-
   .room {
+    margin-left: 0.5rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -118,9 +92,16 @@
       transition:slide
       class:selected={room === activeRoom}
       on:click={() => dispatch('clickRoom', { room, me })}>
-      <span class="badge tooltip" title="testing">
-        {Object.keys(others).length + 1}
-      </span>
+      <div class="tooltip">
+        <span class="badge">{Object.keys(others).length + 1}</span>
+        <span class="tooltiptext right">
+          <strong>{me}</strong>
+          {#each Object.keys(others) as other}
+            {other}
+            <br />
+          {/each}
+        </span>
+      </div>
       <span class="room">{room}</span>
     </li>
   {/each}

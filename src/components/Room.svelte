@@ -135,7 +135,7 @@
   }
 
   .message {
-    padding: 4px 1em;
+    padding: 0 10px;
     display: inline-block;
     color: white;
     word-break: break-all;
@@ -166,14 +166,22 @@
     <span class="close" on:click={leaveRoom}>&times;</span>
     <div class="room-content">
       <div class="scrollable" bind:this={div}>
-        {#each messages as { username, message }, i}
+        {#each messages as { username, message, timestamp }, i}
           <article
             class:me={activeUsername === username}
             class:system={!username}>
-            {#if i > 0 && messages[i - 1].username !== username}
+            {#if username && i > 0 && messages[i - 1].username !== username}
               <span class="username">{username}</span>
             {/if}
-            <span class="message">{message}</span>
+            <div class="tooltip">
+              <span class="message">{message}</span>
+              {#if username}
+                <span
+                  class={'tooltiptext ' + (activeUsername === username ? 'left' : 'right')}>
+                  {timestamp}
+                </span>
+              {/if}
+            </div>
           </article>
         {/each}
         {#each Object.entries(users) as [username, { typing }]}

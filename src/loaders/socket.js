@@ -84,5 +84,3 @@ function leaveRoom(room, socketId) {
 }
 
 // TODO: Copy and paste room link
-// TODO: CSS for messages (timestamp)
-// TODO: list of users on hover
