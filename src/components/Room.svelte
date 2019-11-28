@@ -135,12 +135,12 @@
   }
 
   .message {
-    padding: 0 10px;
+    padding: 4px 15px;
     display: inline-block;
     color: white;
-    word-break: break-all;
     background-color: #0074d9;
     border-radius: 1em 1em 1em 0;
+    text-align: left;
   }
 
   .me .message {
@@ -151,6 +151,7 @@
   .system .message {
     background: none;
     color: grey;
+    max-width: 100%;
   }
 
   input {
@@ -158,6 +159,7 @@
     height: 6%;
     border: 1px solid #ccc;
     border-left: 0;
+    padding: 0 10px;
   }
 </style>
 

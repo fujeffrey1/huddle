@@ -50,6 +50,7 @@ button:hover {
     position: relative;
     display: inline-block;
     line-height: 25px;
+    max-width: 65%;
 }
 
 .tooltip .tooltiptext {
@@ -63,16 +64,18 @@ button:hover {
     font-size: 12px;
     min-width: 55px;
     z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .tooltip .tooltiptext.right {
-    left: 105%;
-    margin-left: 5px;
+    left: 100%;
+    margin-left: 10px;
 }
 
 .tooltip .tooltiptext.left {
-    right: 105%;
-    margin-right: 5px;
+    right: 100%;
+    margin-right: 10px;
 }
 
 .tooltip:hover .tooltiptext {
@@ -83,9 +86,10 @@ button:hover {
     content: ' ';
     position: absolute;
     top: 13px;
-    margin-top: -5px;
     border-width: 5px;
     border-style: solid;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .tooltip .tooltiptext.right::after {
