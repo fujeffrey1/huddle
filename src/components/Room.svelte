@@ -111,7 +111,7 @@
   .scrollable {
     height: 100%;
     overflow-y: auto;
-    padding: 5px 40px;
+    padding: 5px 15px 40px;
     box-sizing: border-box;
   }
 

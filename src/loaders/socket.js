@@ -84,3 +84,4 @@ function leaveRoom(room, socketId) {
 }
 
 // TODO: Copy and paste room link
+// TODO: Emoji support
