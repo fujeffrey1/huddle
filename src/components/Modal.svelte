@@ -103,10 +103,6 @@
     color: rgba(0, 200, 128, 0.7);
   }
 
-  .form-group input:focus {
-    outline: none;
-  }
-
   .form-group input:focus ~ .bar::before {
     width: 100%;
     left: 0;
@@ -143,7 +139,10 @@
         <label for="input" class="control-label">Username</label>
         <i class="bar" />
       </div>
-      <button type="submit" class="submit-button" disabled={!roomTrimmed}>
+      <button
+        type="submit"
+        class="submit-button theme-button"
+        disabled={!roomTrimmed}>
         Join
       </button>
     </form>

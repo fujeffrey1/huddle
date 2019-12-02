@@ -1,6 +1,8 @@
 <script>
   import { slide } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
+  import Icon from "fa-svelte";
+  import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
   import Modal from "./Modal.svelte";
   import { userStore } from "./stores/user";
 
@@ -75,8 +77,8 @@
     display: flex;
     justify-content: center;
     margin: 10px auto;
+    padding: 5px;
     font-size: 22px;
-    font-weight: 800;
     width: 90%;
   }
 
@@ -86,7 +88,9 @@
 </style>
 
 <ul>
-  <button on:click={handleOpen} class="join-button">+</button>
+  <button on:click={handleOpen} class="join-button theme-button">
+    <Icon icon={faPlusCircle} />
+  </button>
   {#each Object.entries($userStore).reverse() as [room, { me, others }] (room)}
     <li
       transition:slide

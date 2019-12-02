@@ -1,6 +1,7 @@
 <script>
   import { beforeUpdate, afterUpdate, createEventDispatcher } from "svelte";
   import debounce from "lodash.debounce";
+  import EmojiSelector from "svelte-emoji-selector";
   import { userStore } from "./stores/user";
   import { messageStore } from "./stores/message";
   import { socketStore as socket } from "./stores/socket";
@@ -91,6 +92,11 @@
       dispatch("leaveRoom", data);
     });
   }
+
+  function onEmoji(event) {
+    input.value += event.detail;
+    input.focus();
+  }
 </script>
 
 <style>
@@ -112,7 +118,6 @@
     height: 100%;
     overflow-y: auto;
     padding: 5px 15px 40px;
-    box-sizing: border-box;
   }
 
   article {
@@ -154,12 +159,39 @@
     max-width: 100%;
   }
 
-  input {
-    font-size: 2vh;
+  .input {
+    display: flex;
     height: 6%;
     border: 1px solid #ccc;
     border-left: 0;
+  }
+
+  .input input {
+    flex: 15;
+    font-size: 2vh;
     padding: 0 10px;
+    border: none;
+    border-left: 1px solid #ccc;
+  }
+
+  :global(.svelte-emoji-picker__trigger) {
+    flex: 1;
+    border: none;
+    line-height: 6%;
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(.svelte-emoji-picker__search input) {
+    font-size: 16px;
+  }
+
+  :global(.svelte-emoji-picker__emoji-detail) {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0;
   }
 </style>
 
@@ -195,6 +227,9 @@
         {/each}
       </div>
     </div>
-    <input on:keypress={handleKeydown} bind:this={input} />
+    <div class="input">
+      <EmojiSelector on:emoji={onEmoji} />
+      <input on:keypress={handleKeydown} bind:this={input} />
+    </div>
   {/if}
 </div>

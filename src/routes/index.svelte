@@ -42,6 +42,7 @@
 
   .room {
     flex: 4;
+    position: relative;
   }
 </style>
 

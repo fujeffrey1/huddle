@@ -32,7 +32,7 @@
   .selected {
     position: relative;
     display: inline-block;
-    color: teal;
+    color: black;
     font-weight: bold;
   }
 
@@ -51,7 +51,6 @@
     text-decoration: none;
     padding: 1em 0.5em;
     display: block;
-    box-sizing: border-box;
     height: 100%;
   }
 </style>
