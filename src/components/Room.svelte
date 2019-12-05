@@ -185,13 +185,15 @@
 
   :global(.svelte-emoji-picker__search input) {
     font-size: 16px;
+    border-width: 1px;
   }
 
-  :global(.svelte-emoji-picker__emoji-detail) {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 0;
+  :global(.svelte-emoji-picker__search .icon) {
+    top: 6px;
+  }
+
+  :global(.svelte-emoji-picker__emoji-tabs) {
+    height: 16rem !important;
   }
 </style>
 
