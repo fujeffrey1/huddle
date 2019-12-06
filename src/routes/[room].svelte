@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "@sapper/app";
   import { stores } from "@sapper/app";
   import Modal from "../components/Modal.svelte";
   import Room from "../components/Room.svelte";
@@ -12,7 +13,11 @@
 </script>
 
 {#if !activeUsername}
-  <Modal {room} />
+  <Modal
+    {room}
+    on:close={() => {
+      goto('/');
+    }} />
 {:else}
   <Room {activeRoom} {activeUsername} />
 {/if}

@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "@sapper/app";
   import { beforeUpdate, afterUpdate } from "svelte";
   import debounce from "lodash.debounce";
   import EmojiSelector from "svelte-emoji-selector";
@@ -90,6 +91,7 @@
 
   function leaveRoom() {
     $socket.emit("leave room", activeRoom, function(room) {
+      goto("/");
       activeStore.setActive("", "");
       userStore.leave(room);
       messageStore.close(room);

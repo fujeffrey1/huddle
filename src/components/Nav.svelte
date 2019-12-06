@@ -29,14 +29,17 @@
     height: 100%;
   }
 
-  .selected {
-    position: relative;
+  a {
+    text-decoration: none;
+    padding: 1em 0.5em;
     display: inline-block;
+    height: 100%;
+    position: relative;
     color: black;
     font-weight: bold;
   }
 
-  .selected::after {
+  a::after {
     position: absolute;
     content: "";
     width: calc(100% - 1em);
@@ -45,20 +48,12 @@
     display: block;
     bottom: -1px;
   }
-
-  a {
-    color: #ccc;
-    text-decoration: none;
-    padding: 1em 0.5em;
-    display: block;
-    height: 100%;
-  }
 </style>
 
 <nav>
   <ul>
     <li>
-      <a class:selected={segment === undefined} href=".">Huddle</a>
+      <a href=".">Huddle</a>
     </li>
   </ul>
 </nav>

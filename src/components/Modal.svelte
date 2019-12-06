@@ -12,8 +12,12 @@
   export let room = "";
   let username = "";
 
-  $: roomTrimmed = room.trim();
-  $: usernameTrimmed = username.trim();
+  $: roomTrimmed = room && room.trim();
+  $: usernameTrimmed = username && username.trim();
+
+  function handleClick() {
+    dispatch("close");
+  }
 
   function handleSubmit() {
     $socket.emit(
@@ -127,9 +131,9 @@
   }
 </style>
 
-<div class="modal" transition:fade>
+<div class="modal" in:fade>
   <div class="modal-content">
-    <span class="close" on:click={e => dispatch('close')}>&times;</span>
+    <span class="close" on:click={handleClick}>&times;</span>
     <form on:submit|preventDefault={handleSubmit}>
       <div class="form-group">
         <input

@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "@sapper/app";
   import { slide } from "svelte/transition";
   import Icon from "fa-svelte";
   import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -91,7 +92,10 @@
     <li
       transition:slide
       class:selected={room === $activeStore.activeRoom}
-      on:click={() => activeStore.setActive(room, me)}>
+      on:click={() => {
+        activeStore.setActive(room, me);
+        goto(`/${room}`);
+      }}>
       <div class="tooltip">
         <span class="badge">{Object.keys(others).length + 1}</span>
         <span class="tooltiptext right">
