@@ -84,3 +84,4 @@ function leaveRoom(room, socketId) {
 }
 
 // TODO: Copy and paste room link
+// TODO: Fix tooltip with long usernames

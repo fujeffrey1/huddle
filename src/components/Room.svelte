@@ -147,6 +147,7 @@
     background-color: #0074d9;
     border-radius: 1em 1em 1em 0;
     text-align: left;
+    word-break: break-all;
   }
 
   .me .message {
