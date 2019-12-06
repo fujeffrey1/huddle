@@ -1,22 +1,23 @@
 <script>
-  import { beforeUpdate, afterUpdate, createEventDispatcher } from "svelte";
+  import { beforeUpdate, afterUpdate } from "svelte";
   import debounce from "lodash.debounce";
   import EmojiSelector from "svelte-emoji-selector";
+  import { activeStore } from "./stores/active";
   import { userStore } from "./stores/user";
   import { messageStore } from "./stores/message";
   import { socketStore as socket } from "./stores/socket";
 
-  const dispatch = createEventDispatcher();
   const TYPING_TIMER = 5000;
 
-  export let activeRoom;
-  export let activeUsername;
   let previousActiveRoom;
   let previousActiveUsername;
   let div;
   let input;
   let autoscroll;
   let typingTimeout;
+
+  $: activeRoom = $activeStore.activeRoom;
+  $: activeUsername = $activeStore.activeUsername;
   $: users = activeRoom && $userStore[activeRoom]["others"];
   $: messages = $messageStore[activeRoom];
 
@@ -88,8 +89,10 @@
   }
 
   function leaveRoom() {
-    $socket.emit("leave room", activeRoom, function(data) {
-      dispatch("leaveRoom", data);
+    $socket.emit("leave room", activeRoom, function(room) {
+      activeStore.setActive("", "");
+      userStore.leave(room);
+      messageStore.close(room);
     });
   }
 
@@ -108,10 +111,6 @@
 
   .room-content {
     height: 100%;
-  }
-
-  .gray {
-    background-color: #ccc;
   }
 
   .scrollable {
@@ -197,7 +196,7 @@
   }
 </style>
 
-<div class="room" class:gray={!activeRoom}>
+<div class="room">
   {#if activeRoom}
     <span class="close" on:click={leaveRoom}>&times;</span>
     <div class="room-content">

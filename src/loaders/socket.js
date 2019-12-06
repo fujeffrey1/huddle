@@ -84,5 +84,3 @@ function leaveRoom(room, socketId) {
 }
 
 // TODO: Copy and paste room link
-// TODO: Fix center svg and css for emoji
-// TODO: Fix large inputs

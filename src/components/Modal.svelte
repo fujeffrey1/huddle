@@ -1,11 +1,15 @@
 <script>
+  import { goto } from "@sapper/app";
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
+  import { activeStore } from "./stores/active";
+  import { userStore } from "./stores/user";
+  import { messageStore } from "./stores/message";
   import { socketStore as socket } from "./stores/socket";
 
   const dispatch = createEventDispatcher();
 
-  let room = "";
+  export let room = "";
   let username = "";
 
   $: roomTrimmed = room.trim();
@@ -18,9 +22,12 @@
         room: roomTrimmed,
         username: usernameTrimmed
       },
-      function(data) {
+      function({ room, me, others, timestamp }) {
         dispatch("close");
-        dispatch("joinRoom", data);
+        userStore.join(room, me, others);
+        messageStore.join(room, me, timestamp);
+        activeStore.setActive(room, me);
+        goto(`/${room}`);
       }
     );
   }
@@ -125,7 +132,13 @@
     <span class="close" on:click={e => dispatch('close')}>&times;</span>
     <form on:submit|preventDefault={handleSubmit}>
       <div class="form-group">
-        <input type="text" bind:value={room} placeholder=" " required />
+        <input
+          type="text"
+          bind:value={room}
+          placeholder="
+          "
+          maxlength="50"
+          required />
         <label for="input" class="control-label">Room #</label>
         <i class="bar" />
       </div>

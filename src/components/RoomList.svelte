@@ -1,15 +1,11 @@
 <script>
   import { slide } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
   import Icon from "fa-svelte";
   import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
   import Modal from "./Modal.svelte";
+  import { activeStore } from "./stores/active";
   import { userStore } from "./stores/user";
 
-  const dispatch = createEventDispatcher();
-
-  export let activeRoom;
-  export let activeUsername;
   let visible = false;
 
   function handleOpen(event) {
@@ -94,8 +90,8 @@
   {#each Object.entries($userStore).reverse() as [room, { me, others }] (room)}
     <li
       transition:slide
-      class:selected={room === activeRoom}
-      on:click={() => dispatch('clickRoom', { room, me })}>
+      class:selected={room === $activeStore.activeRoom}
+      on:click={() => activeStore.setActive(room, me)}>
       <div class="tooltip">
         <span class="badge">{Object.keys(others).length + 1}</span>
         <span class="tooltiptext right">
@@ -112,5 +108,5 @@
 </ul>
 
 {#if visible}
-  <Modal on:close={handleClose} on:joinRoom />
+  <Modal on:close={handleClose} />
 {/if}
