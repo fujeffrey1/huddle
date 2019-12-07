@@ -98,11 +98,11 @@
       }}>
       <div class="tooltip">
         <span class="badge">{Object.keys(others).length + 1}</span>
-        <span class="tooltiptext right">
+        <span class="tooltiptext">
           <strong>{me}</strong>
           {#each Object.keys(others) as other}
-            {other}
             <br />
+            {other}
           {/each}
         </span>
       </div>

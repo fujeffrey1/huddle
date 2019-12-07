@@ -3,6 +3,9 @@
   import { beforeUpdate, afterUpdate } from "svelte";
   import debounce from "lodash.debounce";
   import EmojiSelector from "svelte-emoji-selector";
+  import { notifier } from "@beyonk/svelte-notifications";
+  import Icon from "fa-svelte";
+  import { faCopy, faTimes } from "@fortawesome/free-solid-svg-icons";
   import { activeStore } from "./stores/active";
   import { userStore } from "./stores/user";
   import { messageStore } from "./stores/message";
@@ -98,6 +101,16 @@
     });
   }
 
+  function copyLink() {
+    let dummy = document.createElement("input");
+    document.body.appendChild(dummy);
+    dummy.value = window.location.href;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+    notifier.success("Link copied");
+  }
+
   function onEmoji(event) {
     input.value += event.detail;
     input.focus();
@@ -109,6 +122,21 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+  }
+
+  .room-icons {
+    display: flex;
+    position: absolute;
+    right: 0;
+    width: 70px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px 0 0;
+    font-size: 20px;
+  }
+
+  .room-icons *:hover {
+    cursor: pointer;
   }
 
   .room-content {
@@ -201,7 +229,14 @@
 
 <div class="room">
   {#if activeRoom}
-    <span class="close" on:click={leaveRoom}>&times;</span>
+    <div class="room-icons">
+      <span on:click={copyLink}>
+        <Icon icon={faCopy} />
+      </span>
+      <span on:click={leaveRoom}>
+        <Icon icon={faTimes} />
+      </span>
+    </div>
     <div class="room-content">
       <div class="scrollable" bind:this={div}>
         {#each messages as { username, message, timestamp }, i}

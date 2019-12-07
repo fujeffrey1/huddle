@@ -82,6 +82,3 @@ function leaveRoom(room, socketId) {
         delete roomList[room][socketId];
     }
 }
-
-// TODO: Copy and paste room link
-// TODO: Fix tooltip with long usernames
